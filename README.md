@@ -90,16 +90,16 @@ Date,Train_ID,Ville_Arrivée,Nombre_Passagers
 
 ### 2. evenements.csv
 ```csv
-Date,Événement_Présent,Description_Événement
+Date,Evenement_Present,Description_Evenement
 2024-01-01,1,Nouvel An
 2024-01-02,0,
 ```
 
 ### 3. vacances.csv
 ```csv
-Date,Vacance
-2024-01-01,1
-2024-01-02,0
+Date,Vacance,Titre_Vacances
+2024-01-01,1,Nouvel An
+2024-01-02,0,
 ```
 
 ## 🧠 Machine Learning Models
