@@ -1,21 +1,45 @@
-# Node.js with React
-# Build a Node.js project that uses React.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+# Azure DevOps Pipeline for Node.js with React
 
 trigger:
-- main
+- main  # Déclenche sur chaque push dans la branche main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'  # Agent Ubuntu
+
+variables:
+  buildDir: 'build'  # Dossier de build (React)
+  nodeVersion: '20.x'  # Version de Node.js
 
 steps:
+# Checkout du repository
+- checkout: self
+  fetchDepth: 1
+
+# Installer Node.js
 - task: NodeTool@0
   inputs:
-    versionSpec: '20.x'
-  displayName: 'Install Node.js'
+    versionSpec: '$(nodeVersion)'
+  displayName: 'Install Node.js $(nodeVersion)'
 
+# Restaurer les dépendances NPM
 - script: |
-    npm install
+    npm ci
+  displayName: 'Install Dependencies'
+
+# Exécuter les tests (optionnel mais recommandé)
+- script: |
+    npm test -- --ci --reporters=default --reporters=jest-junit
+  displayName: 'Run Tests'
+
+# Build de l'application React
+- script: |
     npm run build
-  displayName: 'npm install and build'
+  displayName: 'Build React App'
+
+# Publier le dossier de build comme artefact Azure DevOps
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(buildDir)'
+    ArtifactName: 'react-build'
+    publishLocation: 'Container'
+  displayName: 'Publish Build Artifacts'
